@@ -7,11 +7,18 @@ import Login from './components/auth/Login'
 import './App.css';
 import { LOGOUT } from './actions/types';
 
+import Dashboard from './components/dashboard/Dashboard' 
 
+
+import PrivateRoute from './components/routing/PrivateRoute'
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
+import CreateProfile from './components/profile-forms/CreateProfile'
+import MyPosts from './components/posts/MyPosts'
+import FriendPosts from './components/posts/FriendPosts'
+
 
 
 if(localStorage.token){
@@ -33,9 +40,12 @@ const App=()=>{
 <Switch>
 <Route exact path='/register' component={Register}/>
 <Route exact path='/login' component={Login}/>
+<PrivateRoute exact path='/dashboard' component={Dashboard}/>
+<PrivateRoute exact path='/create-profile' component={CreateProfile}/>
+<PrivateRoute exact path='/myPosts' component={MyPosts}/>
+<PrivateRoute exact path='/friendPosts' component={FriendPosts}/>
 </Switch>
 </section>
-<h1>App</h1>
 </Fragment>
 </Router>
 </Provider>)

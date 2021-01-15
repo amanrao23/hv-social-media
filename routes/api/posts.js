@@ -71,34 +71,37 @@ router.delete('/:id',auth,async(req,res)=>{
 router.get('/myPosts',auth, async(req,res)=>{
     
     try {
-        const myPosts= await Post.find({user:req.user.id})
-        console.log(myPosts)
-        res.status(200).send(myPosts);
-
+        console.log(req.user.id)
+        const myPosts= await Post.find({user:req.user.id}
+            )
+        res.json(myPosts);
         
     } catch (error) {
         console.error(error.message)
+        res.status(500).send('Server Error');
     }
     })
 
 // get posts by friends
 router.get('/friendsPost',auth, async(req,res)=>{
-    allPosts=[]
     try {
+        
         const mySelf=await User.findById(req.user.id)
-        const friends=mySelf.friendList
+        const friends=await mySelf.friendList
+        let allPosts=[]
+        
         friends.forEach(async friend=>{
             const Posts= await Post.find({user:friend})
-            allPosts.push(Posts)
+            await allPosts.concat(Posts)
+                 
         })
         console.log(allPosts)
-        res.status(200).send(allPosts)
-        // const myPosts= await Post.find({user:req.user.id})
-        // console.log(myPosts)
-        // res.status(200).send(myPosts);
+        // res.json(allPosts)
+        
         
     } catch (error) {
         console.error(error.message)
+        res.status(500).send('Server Error');
     }
     })
 
