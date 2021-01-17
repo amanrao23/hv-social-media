@@ -18,7 +18,10 @@ import setAuthToken from './utils/setAuthToken';
 import CreateProfile from './components/profile-forms/CreateProfile'
 import MyPosts from './components/posts/MyPosts'
 import FriendPosts from './components/posts/FriendPosts'
-
+import Post from './components/post/Post'
+import GetUsers from './components/friends/Allusers'
+import AllFriends from './components/friends/AllFriends'
+import PotentialFriends from './components/friends/PotentialFriends'
 
 
 if(localStorage.token){
@@ -44,6 +47,11 @@ const App=()=>{
 <PrivateRoute exact path='/create-profile' component={CreateProfile}/>
 <PrivateRoute exact path='/myPosts' component={MyPosts}/>
 <PrivateRoute exact path='/friendPosts' component={FriendPosts}/>
+<PrivateRoute exact path='/posts/post/:id' component={Post}/>
+<PrivateRoute exact path='/getUsers' component={GetUsers}/>
+<PrivateRoute exact path='/getFriends' component={AllFriends}/>
+<PrivateRoute exact path='/getPotentialFriends' component={PotentialFriends}/>
+
 </Switch>
 </section>
 </Fragment>

@@ -13,9 +13,7 @@ const MyPosts = ({getMyPosts,post:{posts,loading}}) => {
     return (
         <Fragment>
         <h1 className="large text-primary">My Posts</h1>
-        <p className="lead">
-          <i className="fas fa-user" /> Posts by you:
-        </p>
+        
          <PostForm/>
         <div className="posts">
           {posts.map((post) => (

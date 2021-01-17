@@ -12,10 +12,9 @@ const FriendPosts = ({getFriendPosts,post:{posts,loading}}) => {
     
     return (
         <Fragment>
+        <PostForm/>
         <h1 className="large text-primary">Friends Posts</h1>
-        <p className="lead">
-          <i className="fas fa-user" /> Posts by Friends:
-        </p>
+        
          
         <div className="posts">
           {posts.map((post) => (
@@ -27,7 +26,7 @@ const FriendPosts = ({getFriendPosts,post:{posts,loading}}) => {
 }
 
 FriendPosts.propTypes = {
-get_posts:PropTypes.func.isRequired,
+getFriendPosts:PropTypes.func.isRequired,
 post:PropTypes.object.isRequired,
 }
 const mapStateToProps=state=>({

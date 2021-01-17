@@ -14,7 +14,7 @@
            {profile!==null ? (
                <Fragment>
                {profile.bio}
-               <PostForm />
+               
                </Fragment>
                
            ):(<Fragment>
@@ -24,6 +24,7 @@
             
             </Link>
             </Fragment>)}
+            <PostForm />
            </Fragment>
        )
    }

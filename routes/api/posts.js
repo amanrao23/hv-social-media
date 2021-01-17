@@ -71,7 +71,6 @@ router.delete('/:id',auth,async(req,res)=>{
 router.get('/myPosts',auth, async(req,res)=>{
     
     try {
-        console.log(req.user.id)
         const myPosts= await Post.find({user:req.user.id}
             )
         res.json(myPosts);
@@ -81,22 +80,40 @@ router.get('/myPosts',auth, async(req,res)=>{
         res.status(500).send('Server Error');
     }
     })
-
+    
+//GET A SINGLE POST
+    router.get('/post/:id', auth, async (req, res) => {
+        try {
+          const post = await Post.findById(req.params.id);
+            console.log(post)
+          if (!post) {
+            return res.status(404).json({ msg: 'Post not found' });
+          }
+      
+          res.json(post);
+        } catch (err) {
+          console.error(err.message);
+      
+          res.status(500).send('Server Error');
+        }
+      });
+      
 // get posts by friends
 router.get('/friendsPost',auth, async(req,res)=>{
     try {
         
         const mySelf=await User.findById(req.user.id)
         const friends=await mySelf.friendList
-        let allPosts=[]
         
-        friends.forEach(async friend=>{
-            const Posts= await Post.find({user:friend})
-            await allPosts.concat(Posts)
-                 
-        })
+        let allPosts=[]
+        for(let i=0;i<friends.length;i++){
+            const Posts= await Post.find({user:friends[i]})
+            for(let j=0;j<Posts.length;j++)
+            allPosts.unshift(Posts[j]) 
+        }
         console.log(allPosts)
-        // res.json(allPosts)
+         res.json(allPosts)   
+        
         
         
     } catch (error) {
@@ -222,6 +239,8 @@ catch(err){
 }
 
 })
+
+
 
 
 module.exports=router
