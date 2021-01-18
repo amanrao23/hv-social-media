@@ -9,7 +9,8 @@ import {
     GET_FRIEND_POSTS,
     GET_SENT_REQUEST,
     GET_FRIENDS,
-    GET_POTENTIAL_FRIENDS
+    GET_POTENTIAL_FRIENDS,
+    GET_FRIEND_REQUESTS,GET_REQUESTS
 } from './types'
 
 
@@ -75,6 +76,23 @@ export const sendRequest= userId=>async dispatch=>{
         dispatch(setAlert('Request Sent','success'))
     }
     
+    catch (error) {
+        dispatch({
+        type:ERROR_REQUEST,
+        payload:{msg:error.response}
+        })
+    }
+}
+
+
+export const getRequests=()=>async dispatch=>{
+    try{
+        const res=await axios.get(`/api/users/getRequests`)
+        dispatch({
+            type:GET_REQUESTS,
+            payload:res.data
+        })
+    }
     catch (error) {
         dispatch({
         type:ERROR_REQUEST,

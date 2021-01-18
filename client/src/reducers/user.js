@@ -1,4 +1,4 @@
-import { GET_USERS,SEND_FRIEND_REQUEST,ACCEPT_FRIEND_REQUEST,ERROR_REQUEST,GET_SENT_REQUEST,GET_FRIENDS,GET_POTENTIAL_FRIENDS} from "../actions/types"
+import { GET_USERS,SEND_FRIEND_REQUEST,ACCEPT_FRIEND_REQUEST,ERROR_REQUEST,GET_SENT_REQUEST,GET_FRIENDS,GET_POTENTIAL_FRIENDS,GET_REQUESTS} from "../actions/types"
 
 
 const initialState={
@@ -24,7 +24,13 @@ export default function(state=initialState,action){
             case GET_FRIENDS:
             return {
                 ...state,
-                friends:payload,
+                friends:[payload],
+                loading:false
+            }
+            case GET_REQUESTS:
+            return {
+                ...state,
+                friendRequest:[payload],
                 loading:false
             }
             
@@ -44,7 +50,7 @@ export default function(state=initialState,action){
         case SEND_FRIEND_REQUEST:
             return {
                 ...state,
-                users:[state.users.filter(potentialFriend=>potentialFriend._id!==payload)],
+                users:[state.users.filter((potentialFriend)=>potentialFriend._id!==payload)],
                 sentRequest:[payload,...state.sentRequest],
                 loading:false
             }

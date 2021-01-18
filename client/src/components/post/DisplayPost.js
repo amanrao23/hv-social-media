@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 
 const DisplayPost = ({
     auth,
-    post: { _id, text, name, avatar, user, likes, comments, date }})=>(
+    post: {  text, name, avatar, user, likes, comments, date }})=>(
+    
     <Fragment>
     <div className="post bg-white p-1 my-1">
     <div>

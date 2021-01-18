@@ -90,10 +90,10 @@ router.get('/getPotentialFriends',auth,async(req, res) => {
   {
     const potentialCandidates = await User.find({ "_id": { "$ne": req.user.id }}).select('_id')
     
-    const recieverToNeglect= await FriendRequest.find({sender:req.user.id}).select('reciever')
-
+    const recieverToNeglect= await FriendRequest.find({sender:req.user.id}).select('recipient')
+    
     const senderToNeglect= await FriendRequest.find({reciever:req.user.id}).select('sender')
-     
+    
     
     const mySelf=await User.findById(req.user.id)
     friends=await mySelf.friendList
@@ -107,13 +107,14 @@ router.get('/getPotentialFriends',auth,async(req, res) => {
     
     for(let i=0;i<recieverToNeglect.length;i++){
       
-      if(candidates.has(JSON.stringify(recieverToNeglect[i]._id))){
-        candidates.delete(JSON.stringify(recieverToNeglect[i]._id))
+      if(candidates.has(JSON.stringify(recieverToNeglect[i].recipient))){
+        
+        candidates.delete(JSON.stringify(recieverToNeglect[i].recipient))
       }}
       for(let i=0;i<senderToNeglect.length;i++){
       
-        if(candidates.has(JSON.stringify(senderToNeglect[i]._id))){
-          candidates.delete(JSON.stringify(senderToNeglect[i]._id))
+        if(candidates.has(JSON.stringify(senderToNeglect[i].sender))){
+          candidates.delete(JSON.stringify(senderToNeglect[i].sender))
         }}
 
       for(let i=0;i<friends.length;i++){
@@ -127,6 +128,7 @@ router.get('/getPotentialFriends',auth,async(req, res) => {
       const user= await User.findById(JSON.parse(candidate)).select('_id name')
       finalCandidates.unshift(user)
     }
+    
     res.json(finalCandidates)
     
   } 

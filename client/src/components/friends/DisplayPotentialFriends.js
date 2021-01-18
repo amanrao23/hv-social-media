@@ -1,10 +1,14 @@
-import React, { Fragment } from 'react';
+import React, { Fragment,useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {sendRequest} from '../../actions/user'
+import { getPotentialFriends } from '../../actions/user';
 
-const DisplayPotentialFriends= ({sendRequest,auth,
-    user:{_id,name}})=>(
+const DisplayPotentialFriends= ({getPotentialFriends,sendRequest,auth,
+    user:{_id,name}})=>{
+        useEffect(()=>{
+            getPotentialFriends()},[])
+      return(  
     <Fragment>
      
         <div className="profile bg-light">
@@ -21,7 +25,7 @@ const DisplayPotentialFriends= ({sendRequest,auth,
     
     </Fragment>
     )
-
+      }
 
 DisplayPotentialFriends.propTypes = {
   user: PropTypes.object.isRequired,
@@ -33,6 +37,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps,{sendRequest})(
+export default connect(mapStateToProps,{getPotentialFriends,sendRequest})(
   DisplayPotentialFriends
 );
