@@ -1,8 +1,8 @@
-import { SET_ALERT, REMOVE_ALERT } from '../actions/types';
+import { SET_ALERT, REMOVE_ALERT } from "../actions/types";
 
 const initialState = [];
 
-export const alertReducer=(state = initialState, action) =>{
+function alertReducer(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {

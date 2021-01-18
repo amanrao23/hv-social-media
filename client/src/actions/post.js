@@ -53,9 +53,7 @@ export const getFriendPosts=()=>async dispatch=>{
 //GET A Single post
 export const getPost= id =>async dispatch=>{
     try{
-        console.log("HEYYYYYYYYYYYYYYYYY")
         const res=await axios.get(`/api/posts/post/${id}`)
-        console.log("THIS IS POST")
         dispatch({
             type:GET_POST,
             payload:res.data
@@ -172,7 +170,7 @@ export const addComment=(postId,formData)=>async dispatch=>{
 
 export const deleteComment=(postId,commentId)=>async dispatch=>{
     try{
-        const res=await axios.delete(`/api/posts/comment/${postId}/${commentId}`)
+        await axios.delete(`/api/posts/comment/${postId}/${commentId}`)
         
         dispatch({
             type:REMOVE_COMMENT,

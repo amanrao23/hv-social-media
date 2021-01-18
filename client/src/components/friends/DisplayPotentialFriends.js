@@ -7,7 +7,7 @@ import { getPotentialFriends } from '../../actions/user';
 const DisplayPotentialFriends= ({getPotentialFriends,sendRequest,auth,
     user:{_id,name}})=>{
         useEffect(()=>{
-            getPotentialFriends()},[])
+            getPotentialFriends()},[sendRequest])
       return(  
     <Fragment>
      
@@ -31,6 +31,7 @@ DisplayPotentialFriends.propTypes = {
   user: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   sendRequest:PropTypes.func.isRequired,
+  getPotentialFriends:PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

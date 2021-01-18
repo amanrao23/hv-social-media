@@ -92,8 +92,7 @@ router.get('/getPotentialFriends',auth,async(req, res) => {
     
     const recieverToNeglect= await FriendRequest.find({sender:req.user.id}).select('recipient')
     
-    const senderToNeglect= await FriendRequest.find({reciever:req.user.id}).select('sender')
-    
+    const senderToNeglect= await FriendRequest.find({recipient:req.user.id}).select('sender')
     
     const mySelf=await User.findById(req.user.id)
     friends=await mySelf.friendList
@@ -138,14 +137,7 @@ router.get('/getPotentialFriends',auth,async(req, res) => {
   }
   });
 
-//get all friend requests of a user
-router.get('/getfriendrequests',auth, async (req, res) => {
-    const requests = await FriendRequest.find({
-      recipient: req.user.id
-    });
-    res.status(200).send(requests);
-  });
-  
+
   //get requests sent by a user
 router.get('/getsentrequests',auth, async (req, res) => {
   const requests = await FriendRequest.find({
@@ -175,19 +167,20 @@ router.get('/checkrequest/:id',auth, async (req, res) => {
 router.post('/sendRequest/:id',auth, async (req,res)=>{
     try {
         const other_user=await User.findById(req.params.id)
-        console.log(other_user)
+        const sender= await User.findById(req.user.id)
         if(!other_user){
             return res.status(404).json({msg:"No such user found"})
         }
         const requests = await FriendRequest.findOne({
             recipient: req.params.id,
-            sender: req.user.id
+            sender: sender._id
           })
         if(requests){
               return res.status(400).json({msgs:"Friend Request already sent"})
           }
         
         const newRequest=new FriendRequest({
+            name:sender.name,
             sender:req.user.id,
             recipient:req.params.id
         })
@@ -205,57 +198,53 @@ router.post('/sendRequest/:id',auth, async (req,res)=>{
 
 // accept a friend request
 
-router.post('/acceptRequest',auth,async (req,res)=>{
-    
+router.post('/acceptRequest/:id',auth,async (req,res)=>{
     try {
-    const selfUser=await User.findById(req.user.id)
-    const sender=await User.findById(req.body.id)
-    const requests = await FriendRequest.findOne({
-        sender: req.body.id,
-        recipient: req.user.id
-      })
-    console.log(requests)
-    console.log(sender)
-    if(!sender){
-        return res.status(404).json({msg:"No such user found"})
-    }
-    
-    selfUser.friendList.push(req.body.id)
-    sender.friendList.push(req.user.id)
-    requests.status="accepted"
-    selfUser.save()
-    sender.save()
-    requests.save()
-    res.status(200).json({msg:"Friend Request Accepted"})
-    } catch (error) {
       
+    const request = await FriendRequest.findById(req.params.id)
+    if(!request){
+        return res.status(404).json({msg:"No such request found"})
+    }
+    if(request.status=="accepted"){
+      return res.status(400).json({msg:"Request already accepted"})
+    }
+    const selfUser= await User.findById(req.user.id)
+    const sender= await User.findById(request.sender)
+    selfUser.friendList.push(sender.id)
+    sender.friendList.push(selfUser.id)
+    request.status="accepted"
+    await selfUser.save()
+    await sender.save()
+    await request.save()
+    console.log("KKKKKKKKKKKKKKKKKKKKKKKK")
+    return res.json(req.params.id)
+    } catch (error) {
         console.error(error.message)
     }
     
         
         
 })
+
+// get all friend requests of a user
+
+router.get('/getRequests',auth, async (req, res) => {
+  try {
+    const friendRequests=await FriendRequest.find({recipient:req.user.id, status:"pending"}).select('_id name sender')
+
+    res.json(friendRequests)
+    
+    
+  } catch (error) {
+    console.log(error.message)
+          res.status(500).send("Server Error")
+  }
+  });
 
 
 // reject a friend request
 
-router.post('/acceptRequest',auth,async (req,res)=>{
-    
-    try {
-    const requests = await FriendRequest.findOne({
-        sender: req.body.id,
-        recipient: req.user.id
-      })
 
-    requests.status="rejected"
-
-    requests.save()
-    res.status(200).json({msg:"Friend Request Rejected"})
-    } catch (error) {
-        console.error(error.message)
-    }
-     
-})
 
 // unfriend a person
 router.post('/unfriend',auth,async (req,res)=>{
